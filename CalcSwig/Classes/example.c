@@ -1,5 +1,9 @@
  /* File : example.c */
  
+#include "example.h"
+#include <stdio.h>
+#include <stdlib.h>
+
 //extern "C"
 //{
  #include <time.h>
@@ -21,6 +25,60 @@
      return ctime(&ltime);
  }
 
+struct MyStruct MyStructMake(double the_x, double the_y, double the_z)
+{
+	fprintf(stderr, "_wrap_MyStructMake\n");
+	
+	struct MyStruct ret_struct = { the_x, the_y, the_z };
+	return ret_struct;
+}
+
+struct MyStruct AddStructs(struct MyStruct struct1, struct MyStruct struct2)
+{
+	struct MyStruct ret_struct;
+	ret_struct.x = struct1.x + struct2.x;
+	ret_struct.y = struct1.y + struct2.y;
+	ret_struct.z = struct1.z + struct2.z;
+	return ret_struct;
+}
+
+void MyStructGetXY(struct MyStruct the_struct, double* restrict out_x, double* restrict out_y)
+{
+	if(NULL != out_x)
+	{
+		*out_x = the_struct.x;
+	}
+	if(NULL != out_y)
+	{
+		*out_x = the_struct.y;
+	}
+}
+
+struct MyData
+{
+	int someID;
+	double someNumber;
+};
+
+struct MyData* CreateData()
+{
+	fprintf(stderr, "CreateData\n");
+	struct MyData* ret_val = (struct MyData*)calloc(1, sizeof(struct MyData));
+	return ret_val;
+}
+
+void FreeData(struct MyData* the_data)
+{
+	if(NULL == the_data)
+	{
+		fprintf(stderr, "FreeData NULL\n");
+		return;
+	}
+	
+
+	fprintf(stderr, "FreeData: id:%d, number:%lf\n", the_data->someID, the_data->someNumber);
+	free(the_data);
+}
 
 void emptyCall()
 {
